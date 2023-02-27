@@ -67,6 +67,7 @@ private:
   boost::unordered_map<std::string, ros::Time> barcode_memory_;
 
   double throttle_;
+  int pub_queue_size_, sub_queue_size_;
 };
 
 }  // namespace zbar_ros

@@ -48,8 +48,10 @@ namespace zbar_ros
   {
     nh_ = getNodeHandle();
     private_nh_ = getPrivateNodeHandle();
+    private_nh_.param<int>("pub_queue_size", pub_queue_size_, 10);
+    private_nh_.param<int>("sub_queue_size", sub_queue_size_, 1);
 
-    barcode_pub_ = nh_.advertise<std_msgs::String>("barcode", 10,
+    barcode_pub_ = nh_.advertise<std_msgs::String>("barcode", pub_queue_size_,
         boost::bind(&BarcodeReaderNodelet::connectCb, this),
         boost::bind(&BarcodeReaderNodelet::disconnectCb, this));
 
@@ -65,7 +67,7 @@ namespace zbar_ros
     if (!camera_sub_ && barcode_pub_.getNumSubscribers() > 0)
     {
       NODELET_INFO("Connecting to camera topic.");
-      camera_sub_ = nh_.subscribe("image", 10, &BarcodeReaderNodelet::imageCb, this);
+      camera_sub_ = nh_.subscribe("image", sub_queue_size_, &BarcodeReaderNodelet::imageCb, this);
     }
   }
 
